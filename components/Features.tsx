@@ -15,6 +15,7 @@ export interface Restaurant {
   reviews: string;
   category: string;
   dishes: {
+    image(image: any): unknown;
     id: number;
     name: string;
     description: string;
