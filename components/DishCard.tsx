@@ -1,7 +1,23 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import * as Icon from "react-native-feather";
 import { ThemeColors } from "@/theme/Theme";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  removeFromCart,
+  selectCartItemsById,
+} from "@/store/cartSlice";
+import { useTypedSelector } from "@/app/CartScreen";
+import { createSelector } from "reselect";
+import { RootState } from "@/store/store";
+
+const selectCartItems = (state: RootState) => state.cart.cart;
+
+export const selectCartItemById = (id: number) =>
+  createSelector([selectCartItems], (cartItems) =>
+    cartItems.filter((item) => item.id == id.toString())
+  );
 
 interface DishProps {
   item: {
@@ -14,6 +30,25 @@ interface DishProps {
 }
 
 const DishCard = ({ item }: DishProps) => {
+  // Create a memoized selector for the current item's ID
+  const selectCartItem = React.useMemo(
+    () => selectCartItemById(item.id),
+    [item.id]
+  );
+
+  // Use the memoized selector
+  const cartItemById = useSelector((state: RootState) => selectCartItem(state));
+
+  const dispatch = useDispatch();
+
+  const handleIncrease = () => {
+    dispatch(addToCart({ ...item }));
+  };
+
+  const handleDecrease = () => {
+    dispatch(removeFromCart(item.id));
+  };
+
   return (
     <View
       className="flex-row rounded-xl items-center py-2 mt-5"
@@ -43,19 +78,22 @@ const DishCard = ({ item }: DishProps) => {
             ${item.price}
           </Text>
           <View className="flex-row items-center">
-            <View
-              className=" items-center justify-center p-1 rounded-full mr-3"
+            <TouchableOpacity
+              onPress={handleDecrease}
+              disabled={!cartItemById.length}
+              className=" items-center justify-center p-2 rounded-full mr-3"
               style={{ backgroundColor: ThemeColors.bgColor(1) }}
             >
               <Icon.Minus width={18} height={18} stroke={"white"} />
-            </View>
-            <Text className="text-base">2</Text>
-            <View
-              className=" items-center justify-center p-1 rounded-full ml-3"
+            </TouchableOpacity>
+            <Text className="text-base">{cartItemById.length}</Text>
+            <TouchableOpacity
+              onPress={handleIncrease}
+              className=" items-center justify-center p-2 rounded-full ml-3"
               style={{ backgroundColor: ThemeColors.bgColor(1) }}
             >
               <Icon.Plus width={15} height={15} stroke={"white"} />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
