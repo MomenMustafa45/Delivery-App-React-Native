@@ -8,18 +8,10 @@ import {
 import React from "react";
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Restaurant } from "./Features";
+import { ScreenNavigationProp } from "@/app";
 
-type RootStackParamList = {
-  Home: undefined;
-  Restaurant: { restaurant: Restaurant };
-};
-
-type RestaurantScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "Restaurant"
->;
+type RestaurantScreenScreenNavigationProp = ScreenNavigationProp<"Restaurant">;
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -28,7 +20,7 @@ interface RestaurantCardProps {
 const widthOfScreen = Dimensions.get("window").width;
 
 const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
-  const navigation = useNavigation<RestaurantScreenNavigationProp>();
+  const navigation = useNavigation<RestaurantScreenScreenNavigationProp>();
   return (
     <TouchableWithoutFeedback
       onPress={() => navigation.navigate("Restaurant", { restaurant })}
