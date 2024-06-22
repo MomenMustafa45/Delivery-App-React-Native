@@ -1,15 +1,88 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ThemeColors } from "@/theme/Theme";
 import * as Icon from "react-native-feather";
 import CartItem from "@/components/CartItem";
 import { useNavigation } from "@react-navigation/native";
 import { ScreenNavigationProp } from ".";
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { Restaurant } from "@/components/Features";
+import OrderDetails from "@/components/OrderDetails";
 
 type DeliveryScreenNavigationProp = ScreenNavigationProp<"Delivery">;
 
+// Typed version of useSelector hook
+export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+type CartItemType = {
+  id: number; // Adjusted to number since '2' is not a valid type for id
+  name: string;
+  description: string;
+  image: any;
+  price: number;
+};
+
+interface RepeatedItem {
+  item: CartItemType;
+  count: number;
+}
+
 const CartScreen = () => {
+  const [repeatedItems, setRepeatedItems] = useState<RepeatedItem[]>([]);
+  const [subTotal, setSubTotal] = useState(0);
+  const deliveryFee = 2;
+
+  const restaurant: Restaurant | null = useTypedSelector(
+    (state) => state.restaurant.restaurant
+  );
+
+  const cartItems = useTypedSelector(
+    (state) => state.cart.cart
+  ) as unknown as CartItemType[];
+
   const navigation = useNavigation<DeliveryScreenNavigationProp>();
+
+  // calculate total price
+  const calculateTotalPrice = () => {
+    const subTotalPrice = cartItems.reduce(
+      (prev, curr) => prev + curr.price,
+      0
+    );
+    setSubTotal(subTotalPrice);
+  };
+
+  // Repeated objects and its count
+  const calculateRepeatedItems = (items: CartItemType[]): RepeatedItem[] => {
+    const itemCount: { [key: number]: number } = {};
+
+    // Count the occurrences of each item in cartItems
+    items.forEach((item) => {
+      itemCount[item.id] = (itemCount[item.id] || 0) + 1;
+    });
+
+    // Convert the itemCount object into an array of objects
+    return Object.entries(itemCount).map(([id, count]) => {
+      const cartItem = items.find((item) => item.id === parseInt(id, 10));
+      return {
+        item: cartItem!,
+        count: count as number,
+      };
+    });
+  };
+
+  // Use useMemo to memoize the result of calculateRepeatedItems
+  const memoizedRepeatedItems = useMemo(
+    () => calculateRepeatedItems(cartItems),
+    [cartItems]
+  );
+
+  // Update the state with memoizedRepeatedItems
+  useEffect(() => {
+    setRepeatedItems(memoizedRepeatedItems);
+    calculateTotalPrice();
+  }, [memoizedRepeatedItems]);
+
   return (
     <View className=" relative pt-3 flex-1">
       <TouchableOpacity
@@ -21,7 +94,7 @@ const CartScreen = () => {
       </TouchableOpacity>
       <View>
         <Text className="text-center text-lg font-bold">Your Cart</Text>
-        <Text className="text-center text-gray-600">Papa Johns</Text>
+        <Text className="text-center text-gray-600">{restaurant?.name}</Text>
         {/*  */}
         <View className="bg-[#708086] px-4 flex-row items-center justify-between py-3 my-3">
           <Image
@@ -39,33 +112,12 @@ const CartScreen = () => {
       </View>
       {/* order items */}
       <ScrollView className="px-3 flex-1" showsVerticalScrollIndicator={false}>
-        <CartItem />
-        <CartItem />
-        <CartItem />
+        {repeatedItems.map((e) => (
+          <CartItem key={e["item"].id} cartItem={e} />
+        ))}
       </ScrollView>
       {/* order details */}
-      <View className="px-7 py-5 bg-[#F9DFCD]">
-        <View className="flex-row justify-between items-center my-2">
-          <Text>Subtotal</Text>
-          <Text>$20</Text>
-        </View>
-        <View className="flex-row justify-between items-center my-2">
-          <Text>Delivery Fee</Text>
-          <Text>$2</Text>
-        </View>
-        <View className="flex-row justify-between items-center my-2">
-          <Text className="font-bold">Order Total</Text>
-          <Text className="font-bold">$30</Text>
-        </View>
-        {/* btn place order */}
-        <TouchableOpacity
-          onPress={() => navigation.navigate("LoadingDelivery")}
-          style={{ backgroundColor: ThemeColors.bgColor(1) }}
-          className=" items-center justify-center rounded-full py-3 mt-3"
-        >
-          <Text className="text-white font-bold">Place Order</Text>
-        </TouchableOpacity>
-      </View>
+      <OrderDetails subTotal={subTotal} deliveryFee={deliveryFee} />
     </View>
   );
 };

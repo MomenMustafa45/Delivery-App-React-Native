@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { Restaurant } from "@/components/Features";
 import * as Icon from "react-native-feather";
 import { ThemeColors } from "@/theme/Theme";
 import DishCard from "@/components/DishCard";
 import CartBar from "@/components/CartBar";
+import { useDispatch } from "react-redux";
+import { setRestaurant } from "@/store/restaurantSlice";
 
 // Define the type for your stack navigator
 type RootStackParamList = {
@@ -25,8 +27,13 @@ type RestaurantScreenRouteProp = RouteProp<RootStackParamList, "Restaurant">;
 const RestaurantScreen = () => {
   const navigation = useNavigation();
   const { params } = useRoute<RestaurantScreenRouteProp>();
+  const dispatch = useDispatch();
 
   let item = params["restaurant"];
+
+  useEffect(() => {
+    dispatch(setRestaurant(item));
+  }, []);
 
   return (
     <View className="relative flex-1">

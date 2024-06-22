@@ -6,28 +6,41 @@ import * as Icon from "react-native-feather";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { ScreenNavigationProp } from ".";
+import { useTypedSelector } from "./CartScreen";
+import { useDispatch } from "react-redux";
+import { emptyCart } from "@/store/cartSlice";
+import DriverCard from "@/components/DriverCard";
 
 type HomeScreenNavigationProp = ScreenNavigationProp<"Home">;
 
 const DeliveryScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const restaurant = useTypedSelector((state) => state.restaurant.restaurant);
+  const dispatch = useDispatch();
+
+  const cancelOrderHandler = () => {
+    navigation.navigate("Home");
+    dispatch(emptyCart());
+  };
+
+  const latitude = restaurant?.lat ?? 0; // Provide a default value
+  const longitude = restaurant?.lng ?? 0; // Provide a default value
 
   return (
     <View className="flex-1">
       <MapView
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: latitude,
+          longitude: longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         }}
-        // style={{ height: 200 }}
         className="flex-1"
       >
         <Marker
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          title="Restaurant Name"
-          description="Hot and tasty"
+          coordinate={{ latitude: latitude, longitude: longitude }}
+          title={restaurant?.name}
+          description={restaurant?.description}
         />
       </MapView>
       {/* Delivery Details */}
@@ -61,32 +74,7 @@ const DeliveryScreen = () => {
           </View>
         </View>
         {/* driver details */}
-        <View
-          style={{ backgroundColor: ThemeColors.bgColor(1) }}
-          className="flex-row items-center justify-between px-2 py-2 rounded-full"
-        >
-          <Image
-            source={require("@/assets/images/deliveryUser.png")}
-            style={{ width: 60, height: 60 }}
-            className="rounded-full"
-          />
-
-          <View className="flex-1 ml-3">
-            <Text className="text-white font-bold text-base">Sayed Noman</Text>
-            <Text className="text-white font-bold text-sm">Your Rider</Text>
-          </View>
-
-          <TouchableOpacity className="bg-white p-3 rounded-full justify-center items-center mr-2">
-            <Icon.Phone fill={"#EA8F42"} width={20} height={20} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="bg-white p-3 rounded-full justify-center items-center"
-            onPress={() => navigation.navigate("Home")}
-          >
-            <Icon.X stroke={"#BE0911"} strokeWidth={5} width={20} height={20} />
-          </TouchableOpacity>
-        </View>
+        <DriverCard onCancelOrder={cancelOrderHandler} />
       </View>
     </View>
   );

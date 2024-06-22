@@ -2,8 +2,25 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import * as Icon from "react-native-feather";
 import { ThemeColors } from "@/theme/Theme";
+import { useDispatch } from "react-redux";
+import { removeFromCart } from "@/store/cartSlice";
 
-const CartItem = () => {
+interface CartItemProps {
+  cartItem: {
+    count: number;
+    item: {
+      id: number; // Adjusted to number since '2' is not a valid type for id
+      name: string;
+      description: string;
+      image: any;
+      price: number;
+    };
+  };
+}
+
+const CartItem = ({ cartItem }: CartItemProps) => {
+  const dispatch = useDispatch();
+
   return (
     <View
       className="flex-row justify-between items-center my-2 px-2 py-2 rounded-2xl"
@@ -16,17 +33,18 @@ const CartItem = () => {
         shadowRadius: 3.84,
       }}
     >
-      <Text className="mr-2">2 x</Text>
+      <Text className="mr-2">{cartItem.count} x</Text>
       <Image
         source={require("@/assets/images/pizzaItem.jpg")}
         style={{ width: 50, height: 50 }}
         className="rounded-full mr-3"
       />
-      <Text className="flex-1 font-bold">pizza</Text>
-      <Text className="mr-3 font-bold">$10</Text>
+      <Text className="flex-1 font-bold">{cartItem.item.name}</Text>
+      <Text className="mr-3 font-bold">${cartItem.item.price}</Text>
       <TouchableOpacity
+        onPress={() => dispatch(removeFromCart(cartItem.item.id))}
         style={{ backgroundColor: ThemeColors.bgColor(1) }}
-        className="rounded-full"
+        className="rounded-full p-1"
       >
         <Icon.Minus stroke={"white"} width={20} height={20} />
       </TouchableOpacity>

@@ -1,6 +1,8 @@
 import MyStack from "@/navigation/StackNavigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Restaurant } from "@/components/Features";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 type RootStackParamList = {
   LoadingDelivery: undefined;
@@ -16,7 +18,9 @@ export type ScreenNavigationProp<Screen extends keyof RootStackParamList> =
 export default function Index() {
   return (
     <>
-      <MyStack />
+      <Provider store={store}>
+        <MyStack />
+      </Provider>
     </>
   );
 }
