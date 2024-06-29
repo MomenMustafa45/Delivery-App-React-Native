@@ -98,7 +98,7 @@ const CartScreen = () => {
         {/*  */}
         <View className="bg-[#708086] px-4 flex-row items-center justify-between py-3 my-3">
           <Image
-            source={require("@/assets/images/delivery2.png")}
+            source={require("@/assets/images/deliveryImg2.png")}
             style={{ width: 50, height: 50 }}
           />
           <Text>Deliver in 20-30 minutes</Text>
