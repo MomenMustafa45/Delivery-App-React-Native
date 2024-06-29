@@ -14,7 +14,7 @@ const DriverCard = ({ onCancelOrder }: DriverCardProps) => {
       className="flex-row items-center justify-between px-2 py-2 rounded-full"
     >
       <Image
-        source={require("@/assets/images/driver-biker.png")}
+        source={require("../assets/images/driver-biker.png")}
         style={{ width: 60, height: 60 }}
         className="rounded-full"
       />

@@ -18,7 +18,7 @@ const LoadingDelivery = () => {
   return (
     <View className="flex-1 items-center justify-center bg-white">
       <Image
-        source={require("@/assets/images/deliveryGuy2.png")}
+        source={require("../assets/images/deliveryGuy2.png")}
         style={{ width: "35%", height: "35%" }}
       />
     </View>
