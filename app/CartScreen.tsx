@@ -97,10 +97,11 @@ const CartScreen = () => {
         <Text className="text-center text-gray-600">{restaurant?.name}</Text>
         {/*  */}
         <View className="bg-[#708086] px-4 flex-row items-center justify-between py-3 my-3">
-          <Image
+          {/* <Image
             source={require("../assets/images/deliveryImg2.png")}
             style={{ width: 50, height: 50 }}
-          />
+          /> */}
+          <View className="w-[50px] h-[50px] rounded-full bg-slate-500"></View>
           <Text>Deliver in 20-30 minutes</Text>
           <TouchableOpacity
             className="px-2 py-1 rounded-full items-center justify-center"

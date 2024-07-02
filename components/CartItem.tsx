@@ -35,7 +35,7 @@ const CartItem = ({ cartItem }: CartItemProps) => {
     >
       <Text className="mr-2">{cartItem.count} x</Text>
       <Image
-        source={require("@/assets/images/pizzaItem.jpg")}
+        source={require("../assets/images/pizzaItem.jpg")}
         style={{ width: 50, height: 50 }}
         className="rounded-full mr-3"
       />

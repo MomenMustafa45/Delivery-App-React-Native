@@ -1,10 +1,13 @@
 {
   "expo": {
     "name": "my-app",
-    "slug": "my-app",
+    "slug": "restaurant",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "assetBundlePatterns": [
+      "./assets/images"
+    ],
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -13,7 +16,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "restaurant.com"
     },
     "android": {
       "adaptiveIcon": {
@@ -38,8 +42,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "78d1aa04-51f4-4612-acd7-b4c40efbf682"
+        "projectId": "8de895b4-6b1d-4f59-9dda-eec8a9d2b2ad"
       }
-    }
+    },
+    "owner": "momenmustafa"
   }
 }

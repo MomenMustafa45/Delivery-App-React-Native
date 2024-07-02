@@ -13,11 +13,13 @@ const DriverCard = ({ onCancelOrder }: DriverCardProps) => {
       style={{ backgroundColor: ThemeColors.bgColor(1) }}
       className="flex-row items-center justify-between px-2 py-2 rounded-full"
     >
-      <Image
+      {/* <Image
         source={require("../assets/images/driverbiker.png")}
         style={{ width: 60, height: 60 }}
         className="rounded-full"
-      />
+      /> */}
+
+      <View className="w-[60px] h-[60px] rounded-full bg-slate-700"></View>
 
       <View className="flex-1 ml-3">
         <Text className="text-white font-bold text-base">Sayed Noman</Text>

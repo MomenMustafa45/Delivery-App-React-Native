@@ -67,10 +67,11 @@ const DeliveryScreen = () => {
             <Text className="text-gray-700">Your order is own its way</Text>
           </View>
           <View>
-            <Image
-              source={require("@/assets/images/delivery.png")}
+            {/* <Image
+              source={require("../assets/images/delivery.png")}
               style={{ width: 70, height: 70 }}
-            />
+            /> */}
+            <View className="w-[70px] h-[70px] rounded-full bg-rose-600"></View>
           </View>
         </View>
         {/* driver details */}
